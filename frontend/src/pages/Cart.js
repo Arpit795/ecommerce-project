@@ -1,21 +1,22 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 
 function Cart() {
   const [cart, setCart] = useState([]);
   const user = JSON.parse(localStorage.getItem("user"));
 
-  
-  useEffect(() => {
-  if (user) {
-    loadCart();
-  }
-}, [user]);
+  const loadCart = useCallback(() => {
+    if (!user) return;
 
-  const loadCart = () => {
-    axios.get(`https://ecommerce-project-dd5x.onrender.com/cart/${user.id}`)
-      .then(res => setCart(res.data));
-  };
+    axios
+      .get(`https://ecommerce-project-dd5x.onrender.com/cart/${user.id}`)
+      .then((res) => setCart(res.data));
+  }, [user]);
+
+  useEffect(() => {
+    loadCart();
+  }, [loadCart]);
+
 
  
   const removeItem = (id) => {
