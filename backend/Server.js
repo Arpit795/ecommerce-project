@@ -1,4 +1,4 @@
-const adminRoutes = require("./routes/admin");
+
 const orderRoutes = require("./routes/order");
 const cartRoutes = require("./routes/cart");
 const productRoutes = require("./routes/product");
