@@ -2,6 +2,16 @@ const express = require("express");
 const router = express.Router();
 const db = require("../db");
 
+router.get("/products", (req, res) => {
+  connection.query("SELECT * FROM products", (err, result) => {
+    if (err) {
+      console.error("DB ERROR:", err);
+      return res.status(500).json({ error: err.message });
+    }
+    res.json(result);
+  });
+});
+
 
 // GET all products
 router.get("/", (req, res) => {
