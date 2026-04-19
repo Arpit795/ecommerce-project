@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>🚀 E-commerce Testing Panel</h2>
+
+<!-- REGISTER -->
+<button onclick="register()">Register</button>
+
+<!-- LOGIN -->
+<button onclick="login()">Login</button>
+
+<!-- ADD TO CART -->
+<button onclick="addToCart()">Add to Cart</button>
+
+<!-- VIEW CART -->
+<button onclick="viewCart()">View Cart</button>
+
+<!-- REMOVE ITEM -->
+<button onclick="removeItem()">Remove Item</button>
+
+<!-- CHECKOUT -->
+<button onclick="checkout()">Checkout</button>
+
+<h3>Admin Panel</h3>
+
+<button onclick="addProduct()">Add Product</button>
+<button onclick="updateProduct()">Update Product</button>
+<button onclick="deleteProduct()">Delete Product</button>
+
+<script>
+
+// REGISTER
+function register() {
+  fetch("http://localhost:5000/auth/register", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      email: "test@gmail.com",
+      password: "123456"
+    })
+  })
+  .then(res => res.text())
+  .then(data => alert(data));
+}
+
+// LOGIN
+function login() {
+  fetch("http://localhost:5000/auth/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      email: "test@gmail.com",
+      password: "123456"
+    })
+  })
+  .then(res => res.json())
+  .then(data => alert(JSON.stringify(data)));
+}
+
+// ADD TO CART
+function addToCart() {
+  fetch("http://localhost:5000/cart/add", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      user_id: 1,
+      product_id: 1,
+      quantity: 2
+    })
+  })
+  .then(res => res.text())
+  .then(data => alert(data));
+}
+
+// VIEW CART
+function viewCart() {
+  fetch("http://localhost:5000/cart/1")
+  .then(res => res.json())
+  .then(data => alert(JSON.stringify(data)));
+}
+
+// REMOVE ITEM
+
+function removeItem() {
+  const cartId = prompt("Enter Cart ID:");
+
+  fetch("http://localhost:5000/cart/remove/" + cartId)
+    .then(res => res.text())
+    .then(data => alert(data))
+    .catch(err => alert("Error: " + err));
+}
+
+// CHECKOUT
+function checkout() {
+  fetch("http://localhost:5000/order/checkout", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      user_id: 1
+    })
+  })
+  .then(res => res.json())
+  .then(data => alert(JSON.stringify(data)));
+}
+
+function addProduct() {
+  fetch("http://localhost:5000/admin/add-product", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      name: "Laptop",
+      description: "Gaming laptop",
+      price: 50000,
+      stock: 5
+    })
+  })
+  .then(res => res.text())
+  .then(data => alert(data));
+}
+
+function updateProduct() {
+  const id = prompt("Enter Product ID to update:");
+
+  fetch("http://localhost:5000/admin/update-product/" + id, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      name: "Updated Laptop",
+      price: 45000,
+      stock: 10
+    })
+  })
+  .then(res => res.text())
+  .then(data => alert(data));
+}
+
+function deleteProduct() {
+  const id = prompt("Enter Product ID to delete:");
+
+  fetch("http://localhost:5000/admin/delete-product/" + id)
+    .then(res => res.text())
+    .then(data => alert(data));
+}
+
+
+</script>
+
+</body>
+</html>
