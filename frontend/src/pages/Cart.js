@@ -12,14 +12,14 @@ function Cart() {
   }
 }, [user]);
 
-
   const loadCart = () => {
-    axios.get(`http://localhost:5000/cart/${user.id}`)
+    axios.get(`https://ecommerce-project-dd5x.onrender.com/cart/${user.id}`)
       .then(res => setCart(res.data));
   };
 
+ 
   const removeItem = (id) => {
-    axios.get("http://localhost:5000/cart/remove/" + id)
+    axios.get("https://ecommerce-project-dd5x.onrender.com/cart/remove/" + id)
       .then(() => {
         alert("Item removed");
         loadCart();

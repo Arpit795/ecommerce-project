@@ -11,7 +11,7 @@ function Checkout() {
   const user = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
-    axios.get("http://localhost:5000/cart/1")
+    axios.get("https://ecommerce-project-dd5x.onrender.com/cart/1")
       .then(res => setCart(res.data));
   }, []);
 
@@ -25,7 +25,7 @@ function Checkout() {
 
   const placeOrder = () => {
     console.log("User ID being sent:", user.id);
-    axios.post("http://localhost:5000/order/checkout", {
+    axios.post("https://ecommerce-project-dd5x.onrender.com/order/checkout", {
       user_id: user.id,
       payment_method: paymentMethod
     })

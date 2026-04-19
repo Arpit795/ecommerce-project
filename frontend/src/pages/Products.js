@@ -17,7 +17,7 @@ const addToCart = (productId) => {
     return;
   }
 
-  axios.post("http://localhost:5000/cart/add", {
+  axios.post("https://ecommerce-project-dd5x.onrender.com/cart/add", {
     user_id: user.id,
     product_id: productId,
     quantity: 1
@@ -26,7 +26,7 @@ const addToCart = (productId) => {
 };
 
   useEffect(() => {
-    axios.get("http://localhost:5000/products")
+    axios.get("https://ecommerce-project-dd5x.onrender.com/products")
       .then(res => setProducts(res.data));
   }, []);
 

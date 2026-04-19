@@ -8,7 +8,7 @@ function OrderHistory() {
   // ✅ Hook must always run
   useEffect(() => {
     if (user) {
-      axios.get(`http://localhost:5000/order/details/${user.id}`)
+      axios.get(`https://ecommerce-project-dd5x.onrender.com/order/details/${user.id}`)
         .then(res => setOrders(res.data));
     }
   }, [user]);

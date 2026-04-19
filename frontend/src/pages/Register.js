@@ -9,7 +9,7 @@ function Register() {
   const navigate = useNavigate();
 
   const register = () => {
-    axios.post("http://localhost:5000/auth/register", {
+    axios.post("https://ecommerce-project-dd5x.onrender.com/auth/register", {
       email,
       password
     })

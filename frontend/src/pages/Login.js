@@ -8,7 +8,7 @@ function Login() {
   const navigate = useNavigate();
 
 const login = () => {
-  axios.post("http://localhost:5000/auth/login", {
+  axios.post("https://ecommerce-project-dd5x.onrender.com/auth/login", {
     email,
     password
   })
