@@ -7,27 +7,47 @@ function Checkout() {
   const [orderPlaced, setOrderPlaced] = useState(false);
   const [orderId, setOrderId] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState("COD");
+
+  // ✅ ADDED
+  const [address, setAddress] = useState("");
+
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
 
+  // ✅ FIXED (removed hardcoded 1)
   useEffect(() => {
-    axios.get("https://ecommerce-project-dd5x.onrender.com/cart/1")
-      .then(res => setCart(res.data));
-  }, []);
+    if (!user) return;
 
-  const total = cart.reduce((sum, item) => {
-  const finalPrice = (item.is_sale === 1 && item.discount > 0)
-    ? item.price - (item.price * item.discount / 100)
-    : item.price;
+    axios
+      .get(`https://ecommerce-project-dd5x.onrender.com/cart/${user.id}`)
+      .then(res => {
+        if (Array.isArray(res.data)) {
+          setCart(res.data);
+        } else {
+          setCart([]);
+        }
+      });
+  }, [user]);
 
-  return sum + finalPrice * item.quantity;
-}, 0);
+  // ✅ SAFE total (no crash)
+  const total = Array.isArray(cart)
+    ? cart.reduce((sum, item) => {
+        const finalPrice =
+          item.is_sale === 1 && item.discount > 0
+            ? item.price - (item.price * item.discount / 100)
+            : item.price;
+
+        return sum + finalPrice * item.quantity;
+      }, 0)
+    : 0;
 
   const placeOrder = () => {
     console.log("User ID being sent:", user.id);
+
     axios.post("https://ecommerce-project-dd5x.onrender.com/order/checkout", {
       user_id: user.id,
       payment_method: paymentMethod
+      // (not adding address to backend since you said no logic change)
     })
     .then(res => {
       setOrderPlaced(true);
@@ -36,7 +56,6 @@ function Checkout() {
     .catch(() => alert("Error placing order"));
   };
 
-  // 🎉 ORDER SUCCESS UI
   if (orderPlaced) {
     return (
       <div style={{ textAlign: "center", marginTop: "50px" }}>
@@ -48,20 +67,21 @@ function Checkout() {
   }
 
   if (!user) {
-  return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
-      <h2>⚠ Please login to continue</h2>
-      <button onClick={() => navigate("/login")}>
-        Go to Login
-      </button>
-    </div>
-  );
-}
+    return (
+      <div style={{ textAlign: "center", marginTop: "50px" }}>
+        <h2>⚠ Please login to continue</h2>
+        <button onClick={() => navigate("/login")}>
+          Go to Login
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div style={{ padding: "20px" }}>
       <h2>💳 Checkout</h2>
 
-      {/* ADDRESS (dummy) */}
+      {/* ✅ UPDATED ADDRESS (editable) */}
       <div style={{
         border: "1px solid #ddd",
         padding: "10px",
@@ -69,29 +89,34 @@ function Checkout() {
         borderRadius: "10px"
       }}>
         <h3>Delivery Address</h3>
-        <p>Arpit Srivastava</p>
-        <p>Delhi, India</p>
+
+        <input
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+          placeholder="Enter your address"
+          style={{ padding: "8px", width: "300px" }}
+        />
       </div>
 
-
+      {/* PAYMENT */}
       <div style={{
-          border: "1px solid #ddd",
-          padding: "10px",
-          marginBottom: "20px",
-          borderRadius: "10px"
-        }}>
-          <h3>Payment Method</h3>
+        border: "1px solid #ddd",
+        padding: "10px",
+        marginBottom: "20px",
+        borderRadius: "10px"
+      }}>
+        <h3>Payment Method</h3>
 
-          <select
-            value={paymentMethod}
-            onChange={(e) => setPaymentMethod(e.target.value)}
-            style={{ padding: "8px", width: "200px" }}
-          >
-            <option value="COD">Cash on Delivery</option>
-            <option value="UPI">UPI</option>
-            <option value="BANK">Bank Transfer</option>
-          </select>
-     </div>
+        <select
+          value={paymentMethod}
+          onChange={(e) => setPaymentMethod(e.target.value)}
+          style={{ padding: "8px", width: "200px" }}
+        >
+          <option value="COD">Cash on Delivery</option>
+          <option value="UPI">UPI</option>
+          <option value="BANK">Bank Transfer</option>
+        </select>
+      </div>
 
       {/* ORDER SUMMARY */}
       <div style={{
@@ -101,30 +126,31 @@ function Checkout() {
       }}>
         <h3>Order Summary</h3>
 
-       {cart.map(item => {
-  const finalPrice = (item.is_sale === 1 && item.discount > 0)
-    ? item.price - (item.price * item.discount / 100)
-    : item.price;
+        {cart.map(item => {
+          const finalPrice =
+            item.is_sale === 1 && item.discount > 0
+              ? item.price - (item.price * item.discount / 100)
+              : item.price;
 
-  return (
-    <div key={item.id} style={{ marginBottom: "10px" }}>
-      <p>{item.name} (x{item.quantity})</p>
+          return (
+            <div key={item.id} style={{ marginBottom: "10px" }}>
+              <p>{item.name} (x{item.quantity})</p>
 
-      {(item.is_sale === 1 && item.discount > 0) ? (
-        <p>
-          <span style={{ textDecoration: "line-through", color: "gray" }}>
-            ₹ {item.price * item.quantity}
-          </span>
-          <br />
-          <span style={{ color: "red" }}>
-            ₹ {finalPrice * item.quantity}
-          </span>
-        </p>
-      ) : (
-        <p>₹ {item.price * item.quantity}</p>
-      )}
-        </div>
-        );
+              {(item.is_sale === 1 && item.discount > 0) ? (
+                <p>
+                  <span style={{ textDecoration: "line-through", color: "gray" }}>
+                    ₹ {item.price * item.quantity}
+                  </span>
+                  <br />
+                  <span style={{ color: "red" }}>
+                    ₹ {finalPrice * item.quantity}
+                  </span>
+                </p>
+              ) : (
+                <p>₹ {item.price * item.quantity}</p>
+              )}
+            </div>
+          );
         })}
 
         <hr />
@@ -145,7 +171,6 @@ function Checkout() {
       </div>
 
     </div>
-    
   );
 }
 

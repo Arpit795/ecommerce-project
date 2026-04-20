@@ -41,7 +41,8 @@ function App() {
         }}>
 
           {/* LEFT */}
-          <h2 style={{ margin: 0 }}>E-Commerce App</h2>
+          <h2 style={{ margin: 0 }}>QuickCart</h2>
+          
 
           {/* CENTER */}
           <div style={{ display: "flex", gap: "20px" }}>
