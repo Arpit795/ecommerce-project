@@ -4,16 +4,26 @@ const db = require("../db");
 
 // Add to cart
 router.post("/add", (req, res) => {
+   console.log("BODY:", req.body); 
   const { user_id, product_id, quantity } = req.body;
 
-  db.query(
-    "INSERT INTO cart (user_id, product_id, quantity) VALUES (?, ?, ?)",
-    [user_id, product_id, quantity],
-    (err, result) => {
-      if (err) return res.send(err);
-      res.send("Added to cart");
+ if (!user_id || !product_id || !quantity) {
+    return res.status(400).json({ error: "Missing data" });
+  }
+
+  const sql = `
+    INSERT INTO cart (user_id, product_id, quantity)
+    VALUES (?, ?, ?)
+  `;
+
+  db.query(sql, [user_id, product_id, quantity], (err, result) => {
+    if (err) {
+      console.error("DB ERROR:", err);
+      return res.status(500).json({ error: err.message });
     }
-  );
+
+    res.json({ success: true, message: "Added to cart" });
+  });
 });
 
 // Get cart items

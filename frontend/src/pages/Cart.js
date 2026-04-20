@@ -10,7 +10,14 @@ function Cart() {
 
     axios
       .get(`https://ecommerce-project-dd5x.onrender.com/cart/${user.id}`)
-      .then((res) => setCart(res.data));
+      .then((res) => {
+          if (Array.isArray(res.data)) {
+            setCart(res.data);
+          } else {
+            console.error("Invalid cart data:", res.data);
+            setCart([]); // prevent crash
+          }
+      });
   }, [user]);
 
   useEffect(() => {
