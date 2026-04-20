@@ -14,7 +14,18 @@ function ProductDetail() {
   return (
     <div>
       <h2>{product.name}</h2>
-      <p>{product.description}</p>
+      
+      <ul style={{ 
+        paddingLeft: "20px", 
+        lineHeight: "1.8",
+        fontSize: "14px",
+        color: "#444"
+        }}>
+        {product.description?.split("\n").map((line, i) => (
+          <li key={i}>{line}</li>
+        ))}
+      </ul>
+
       <p>₹ {product.price}</p>
     </div>
   );

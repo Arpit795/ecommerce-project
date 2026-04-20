@@ -117,7 +117,7 @@ const addToCart = (productId) => {
         <Link to={`/product/${p.id}`}>
           <h3>{p.name}</h3>
         </Link>
-
+        
         <p>
           {p.is_sale === 1 && p.discount > 0 ? (
             <>
