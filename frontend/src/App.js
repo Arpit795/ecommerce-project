@@ -67,7 +67,7 @@ function App() {
 
                 <button onClick={() => {
                   localStorage.removeItem("user");
-                  window.location.reload();
+                  setUser(null);
                 }}>
                   Logout
                 </button>
@@ -82,7 +82,7 @@ function App() {
         {/* ROUTES */}
         <Routes>
           <Route path="/" element={<Products />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/login" element={<Login setUser={setUser} />} />
           <Route path="/register" element={<Register />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />

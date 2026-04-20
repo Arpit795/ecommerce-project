@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 
-function Login() {
+function Login({ setUser }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -13,8 +13,9 @@ const login = () => {
     password
   })
   .then(res => {
-    // ✅ success only when status 200
+    //  success only when status 200
     localStorage.setItem("user", JSON.stringify(res.data));
+    setUser(res.data);
     alert("Login Success");
     navigate("/");
   })
