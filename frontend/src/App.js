@@ -42,6 +42,7 @@ function App() {
 
           {/* LEFT */}
           <h2 style={{ margin: 0 }}>QuickCart</h2>
+          <h3>Guid :d3d0c08b-fd4b-40b4-b7dc-07d99c49ef3e</h3>
           
 
           {/* CENTER */}
